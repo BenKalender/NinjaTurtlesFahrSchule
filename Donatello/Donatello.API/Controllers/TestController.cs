@@ -43,7 +43,7 @@ namespace Donatello.API.Controllers
             {
                 var course = new Course
                 {
-                    Name = "Test B Sınıfı Kursu",
+                    Name = "Test B Class Kursu",
                     Description = "Test için oluşturulan kurs",
                     LicenseCategory = LicenseCategory.B,
                     Price = 3000m,
