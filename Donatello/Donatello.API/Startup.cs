@@ -31,12 +31,14 @@ public class Startup
         
         // Base Repository for generic usage
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-        
+
         // Business Services (will be created later)
         // services.AddScoped<IStudentService, StudentService>();
         // services.AddScoped<ICourseService, CourseService>();
         // services.AddScoped<IEnrollmentService, EnrollmentService>();
         // services.AddScoped<IPaymentService, PaymentService>();
+
+        
 
         // Logging - Serilog
         services.AddLogging(builder =>
@@ -49,13 +51,18 @@ public class Startup
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(_configuration)
             .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.PostgreSQL(
-                connectionString,
-                tableName: "Logs",
-                needAutoCreateTable: true)
+            .WriteTo.Console()            
             .CreateLogger();
-
+        /*
+        .WriteTo.PostgreSQL(
+            connectionString,
+            tableName: "Logs",
+            needAutoCreateTable: true)
+        */
+            
+        // ⭐ BU SATIRI EKLE ⭐
+        services.AddControllers();
+        
         // gRPC Configuration
         services.AddGrpc(options =>
         {
@@ -99,9 +106,12 @@ public class Startup
             // endpoints.MapGrpcService<CourseGrpcService>();
             // endpoints.MapGrpcService<EnrollmentGrpcService>();
             // endpoints.MapGrpcService<PaymentGrpcService>();
-            
+
             // Health Check endpoint
             //endpoints.MapHealthChecks("/health");
+            
+            // ⭐ BU SATIRI EKLE ⭐
+            endpoints.MapControllers();
         });
 
         // Auto-migrate database in development

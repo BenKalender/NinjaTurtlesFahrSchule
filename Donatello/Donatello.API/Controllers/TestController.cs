@@ -7,7 +7,7 @@ using Donatello.Core.Enums;
 namespace Donatello.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/test")]
     public class TestController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

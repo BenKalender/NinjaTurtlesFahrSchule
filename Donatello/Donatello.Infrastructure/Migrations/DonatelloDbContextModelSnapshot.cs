@@ -67,7 +67,7 @@ namespace Donatello.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
 
                     b.HasData(
                         new
@@ -146,7 +146,7 @@ namespace Donatello.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Enrollments");
+                    b.ToTable("Enrollments", (string)null);
                 });
 
             modelBuilder.Entity("Donatello.Core.Models.Payment", b =>
@@ -190,7 +190,7 @@ namespace Donatello.Infrastructure.Migrations
 
                     b.HasIndex("EnrollmentId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("Donatello.Core.Models.Student", b =>
@@ -235,7 +235,7 @@ namespace Donatello.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("Donatello.Core.Models.User", b =>
@@ -293,7 +293,7 @@ namespace Donatello.Infrastructure.Migrations
                     b.HasIndex("TCNumber")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Donatello.Core.Models.Enrollment", b =>
