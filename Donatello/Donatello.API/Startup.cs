@@ -2,6 +2,7 @@ using Donatello.Core.Interfaces;
 using Donatello.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Donatello.API.Grpc.Services;
 
 namespace Donatello;
 
@@ -38,7 +39,13 @@ public class Startup
         // services.AddScoped<IEnrollmentService, EnrollmentService>();
         // services.AddScoped<IPaymentService, PaymentService>();
 
-        
+        // gRPC Services Registration
+        services.AddGrpc(options =>
+        {
+            options.EnableDetailedErrors = true; // Only for development
+            options.MaxReceiveMessageSize = 4 * 1024 * 1024; // 4MB
+            options.MaxSendMessageSize = 4 * 1024 * 1024;    // 4MB
+        });
 
         // Logging - Serilog
         services.AddLogging(builder =>
@@ -68,6 +75,7 @@ public class Startup
         {
             options.EnableDetailedErrors = true; // Only for development
         });
+        services.AddGrpcReflection(); // For development/testing
 
         // Health Checks
         //services.AddHealthChecks().AddDbContextCheck<DonatelloDbContext>();
@@ -102,14 +110,20 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             // gRPC services will be mapped here
-            // endpoints.MapGrpcService<StudentGrpcService>();
-            // endpoints.MapGrpcService<CourseGrpcService>();
-            // endpoints.MapGrpcService<EnrollmentGrpcService>();
-            // endpoints.MapGrpcService<PaymentGrpcService>();
+            endpoints.MapGrpcService<StudentGrpcService>();
+            endpoints.MapGrpcService<CourseGrpcService>();
+            endpoints.MapGrpcService<EnrollmentGrpcService>();
+            endpoints.MapGrpcService<PaymentGrpcService>();
 
             // Health Check endpoint
             //endpoints.MapHealthChecks("/health");
             
+            // gRPC Reflection for development/testing
+            if (env.IsDevelopment())
+            {
+                endpoints.MapGrpcReflectionService();
+            }
+
             // ⭐ BU SATIRI EKLE ⭐
             endpoints.MapControllers();
         });

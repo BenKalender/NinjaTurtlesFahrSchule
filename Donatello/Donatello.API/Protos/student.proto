@@ -1,0 +1,111 @@
+syntax = "proto3";
+package donatello.service.db;
+
+option csharp_namespace = "Donatello.API.Grpc";
+
+
+service StudentService {
+  rpc CreateStudent (CreateStudentRequest) returns (StudentResponse);
+  rpc GetStudent (GetStudentRequest) returns (StudentResponse);
+  rpc GetStudentByNumber (GetStudentByNumberRequest) returns (StudentResponse);
+  rpc UpdateStudent (UpdateStudentRequest) returns (StudentResponse);
+  rpc DeleteStudent (DeleteStudentRequest) returns (DeleteStudentResponse);
+  rpc GetAllStudents (GetAllStudentsRequest) returns (GetAllStudentsResponse);
+  rpc GetStudentsWithEnrollments (GetStudentsWithEnrollmentsRequest) returns (GetStudentsWithEnrollmentsResponse);
+}
+
+
+message CreateStudentRequest {
+  string email = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string phone_number = 4;
+  string tc_number = 5;
+  string date_of_birth = 6; // ISO string format
+  string address = 7;
+  string emergency_contact = 8;
+  string emergency_phone = 9;
+}
+
+message GetStudentRequest {
+  string student_id = 1;
+}
+
+message GetStudentByNumberRequest {
+  string student_number = 1;
+}
+
+message UpdateStudentRequest {
+  string student_id = 1;
+  string email = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string phone_number = 5;
+  string address = 6;
+  string emergency_contact = 7;
+  string emergency_phone = 8;
+}
+
+message DeleteStudentRequest {
+  string student_id = 1;
+}
+
+message GetAllStudentsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message GetStudentsWithEnrollmentsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message StudentResponse {
+  string student_id = 1;
+  string user_id = 2;
+  string student_number = 3;
+  string email = 4;
+  string first_name = 5;
+  string last_name = 6;
+  string phone_number = 7;
+  string tc_number = 8;
+  string date_of_birth = 9;
+  string address = 10;
+  string emergency_contact = 11;
+  string emergency_phone = 12;
+  string created_at = 13;
+  bool is_active = 14;
+}
+
+message DeleteStudentResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetAllStudentsResponse {
+  repeated StudentResponse students = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message GetStudentsWithEnrollmentsResponse {
+  repeated StudentWithEnrollmentsResponse students = 1;
+  int32 total_count = 2;
+}
+
+message StudentWithEnrollmentsResponse {
+  StudentResponse student = 1;
+  repeated StudentEnrollmentResponse enrollments = 2;
+}
+
+message StudentEnrollmentResponse {
+  string enrollment_id = 1;
+  string course_id = 2;
+  string course_name = 3;
+  int32 license_category = 4;
+  string enrollment_date = 5;
+  int32 status = 6;
+  double total_amount = 7;
+  double paid_amount = 8;
+}

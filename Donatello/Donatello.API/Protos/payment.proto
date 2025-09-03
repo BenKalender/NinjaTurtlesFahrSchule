@@ -1,0 +1,74 @@
+syntax = "proto3";
+package donatello.service.db;
+
+option csharp_namespace = "Donatello.API.Grpc";
+
+service PaymentService {
+  rpc CreatePayment (CreatePaymentRequest) returns (PaymentResponse);
+  rpc GetPayment (GetPaymentRequest) returns (PaymentResponse);
+  rpc UpdatePaymentStatus (UpdatePaymentStatusRequest) returns (PaymentResponse);
+  rpc GetPaymentsByEnrollment (GetPaymentsByEnrollmentRequest) returns (GetPaymentsByEnrollmentResponse);
+  rpc GetPendingPayments (GetPendingPaymentsRequest) returns (GetPendingPaymentsResponse);
+  rpc ProcessPayment (ProcessPaymentRequest) returns (PaymentResponse);
+}
+
+message CreatePaymentRequest {
+  string enrollment_id = 1;
+  double amount = 2;
+  int32 payment_type = 3; // PaymentType enum
+  string transaction_id = 4;
+  string payment_gateway = 5;
+}
+
+message GetPaymentRequest {
+  string payment_id = 1;
+}
+
+message UpdatePaymentStatusRequest {
+  string payment_id = 1;
+  int32 status = 2; // PaymentStatus enum
+  string transaction_id = 3;
+}
+
+message GetPaymentsByEnrollmentRequest {
+  string enrollment_id = 1;
+}
+
+message GetPendingPaymentsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message ProcessPaymentRequest {
+  string payment_id = 1;
+  string transaction_id = 2;
+  string payment_gateway = 3;
+  string gateway_response = 4;
+}
+
+message PaymentResponse {
+  string payment_id = 1;
+  string enrollment_id = 2;
+  string student_name = 3;
+  string course_name = 4;
+  double amount = 5;
+  int32 payment_type = 6;
+  int32 status = 7;
+  string transaction_id = 8;
+  string payment_gateway = 9;
+  string paid_at = 10;
+  string created_at = 11;
+}
+
+message GetPaymentsByEnrollmentResponse {
+  repeated PaymentResponse payments = 1;
+  double total_paid = 2;
+  double total_pending = 3;
+}
+
+message GetPendingPaymentsResponse {
+  repeated PaymentResponse payments = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}

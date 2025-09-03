@@ -1,0 +1,83 @@
+syntax = "proto3";
+package donatello.service.db;
+
+option csharp_namespace = "Donatello.API.Grpc";
+
+service CourseService {
+  rpc CreateCourse (CreateCourseRequest) returns (CourseResponse);
+  rpc GetCourse (GetCourseRequest) returns (CourseResponse);
+  rpc UpdateCourse (UpdateCourseRequest) returns (CourseResponse);
+  rpc DeleteCourse (DeleteCourseRequest) returns (DeleteCourseResponse);
+  rpc GetAllCourses (GetAllCoursesRequest) returns (GetAllCoursesResponse);
+  rpc GetCoursesByCategory (GetCoursesByCategoryRequest) returns (GetAllCoursesResponse);
+  rpc GetActiveCourses (GetActiveCoursesRequest) returns (GetAllCoursesResponse);
+}
+
+message CreateCourseRequest {
+  string name = 1;
+  string description = 2;
+  int32 license_category = 3;
+  double price = 4;
+  int32 theory_hours = 5;
+  int32 practice_hours = 6;
+  int32 duration = 7;
+}
+
+message GetCourseRequest {
+  string course_id = 1;
+}
+
+message UpdateCourseRequest {
+  string course_id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  int32 theory_hours = 5;
+  int32 practice_hours = 6;
+  int32 duration = 7;
+  bool is_active = 8;
+}
+
+message DeleteCourseRequest {
+  string course_id = 1;
+}
+
+message GetAllCoursesRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message GetCoursesByCategoryRequest {
+  int32 license_category = 1;
+}
+
+message GetActiveCoursesRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message CourseResponse {
+  string course_id = 1;
+  string name = 2;
+  string description = 3;
+  int32 license_category = 4;
+  double price = 5;
+  int32 theory_hours = 6;
+  int32 practice_hours = 7;
+  int32 duration = 8;
+  bool is_active = 9;
+  string created_at = 10;
+}
+
+message DeleteCourseResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetAllCoursesResponse {
+  repeated CourseResponse courses = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+

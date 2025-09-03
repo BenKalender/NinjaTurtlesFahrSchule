@@ -1,0 +1,87 @@
+syntax = "proto3";
+package donatello.service.db;
+
+import "Protos/payment.proto"; 
+
+option csharp_namespace = "Donatello.API.Grpc";
+
+service EnrollmentService {
+  rpc CreateEnrollment (CreateEnrollmentRequest) returns (EnrollmentResponse);
+  rpc GetEnrollment (GetEnrollmentRequest) returns (EnrollmentResponse);
+  rpc UpdateEnrollmentStatus (UpdateEnrollmentStatusRequest) returns (EnrollmentResponse);
+  rpc GetEnrollmentsByStudent (GetEnrollmentsByStudentRequest) returns (GetEnrollmentsByStudentResponse);
+  rpc GetEnrollmentsByCourse (GetEnrollmentsByCourseRequest) returns (GetEnrollmentsByCourseResponse);
+  rpc GetEnrollmentWithPayments (GetEnrollmentWithPaymentsRequest) returns (EnrollmentWithPaymentsResponse);
+  rpc CancelEnrollment (CancelEnrollmentRequest) returns (EnrollmentResponse);
+}
+
+message CreateEnrollmentRequest {
+  string student_id = 1;
+  string course_id = 2;
+  double total_amount = 3;
+}
+
+message GetEnrollmentRequest {
+  string enrollment_id = 1;
+}
+
+message UpdateEnrollmentStatusRequest {
+  string enrollment_id = 1;
+  int32 status = 2; // EnrollmentStatus enum
+}
+
+message GetEnrollmentsByStudentRequest {
+  string student_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message GetEnrollmentsByCourseRequest {
+  string course_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message GetEnrollmentWithPaymentsRequest {
+  string enrollment_id = 1;
+}
+
+message CancelEnrollmentRequest {
+  string enrollment_id = 1;
+  string reason = 2;
+}
+
+message EnrollmentResponse {
+  string enrollment_id = 1;
+  string student_id = 2;
+  string course_id = 3;
+  string student_name = 4;
+  string course_name = 5;
+  int32 license_category = 6;
+  string enrollment_date = 7;
+  int32 status = 8;
+  double total_amount = 9;
+  double paid_amount = 10;
+  double remaining_amount = 11;
+  string completion_date = 12;
+  string created_at = 13;
+}
+
+message GetEnrollmentsByStudentResponse {
+  repeated EnrollmentResponse enrollments = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message GetEnrollmentsByCourseResponse {
+  repeated EnrollmentResponse enrollments = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message EnrollmentWithPaymentsResponse {
+  EnrollmentResponse enrollment = 1;
+  repeated PaymentResponse payments = 2;
+}
