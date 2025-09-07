@@ -68,20 +68,16 @@ public class Startup
         */
             
         // ⭐ BU SATIRI EKLE ⭐
-        services.AddControllers();
-        
-        // gRPC Configuration
-        services.AddGrpc(options =>
-        {
-            options.EnableDetailedErrors = true; // Only for development
-        });
+        //services.AddControllers();
+              
+
         services.AddGrpcReflection(); // For development/testing
 
         // Health Checks
         //services.AddHealthChecks().AddDbContextCheck<DonatelloDbContext>();
 
         // CORS (if needed for web clients)
-        services.AddCors(options =>
+        /* services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>
             {
@@ -89,7 +85,7 @@ public class Startup
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             });
-        });
+        }); */
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -103,7 +99,7 @@ public class Startup
         app.UseMiddleware<GlobalExceptionHandler>();
         
         // CORS
-        app.UseCors();
+        //app.UseCors();
         
         app.UseRouting();
 
@@ -125,7 +121,7 @@ public class Startup
             }
 
             // ⭐ BU SATIRI EKLE ⭐
-            endpoints.MapControllers();
+            //endpoints.MapControllers();
         });
 
         // Auto-migrate database in development

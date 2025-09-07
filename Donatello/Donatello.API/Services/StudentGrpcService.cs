@@ -4,6 +4,7 @@ using Donatello.API.Grpc;
 using Donatello.Core.Interfaces;
 using Donatello.Core.Models;
 using Donatello.Core.Enums;
+using Donatello.API.Helpers;
 
 namespace Donatello.API.Grpc.Services;
 
@@ -24,6 +25,14 @@ public class StudentGrpcService : StudentService.StudentServiceBase
         {
             _logger.LogInformation("Creating new student: {Email}", request.Email);
 
+            var dateOfBirthUTC = DateHelper.ParseToUtcDateTime(request.DateOfBirth);
+
+            if (dateOfBirthUTC == null)
+            {
+                // Dönüştürme başarısız oldu, uygun bir hata döndürün.
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid date of birth format."));
+            }
+
             await _unitOfWork.BeginTransactionAsync();
 
             // Create User first
@@ -34,7 +43,7 @@ public class StudentGrpcService : StudentService.StudentServiceBase
                 LastName = request.LastName,
                 PhoneNumber = request.PhoneNumber,
                 TCNumber = request.TcNumber,
-                DateOfBirth = DateTime.Parse(request.DateOfBirth),
+                DateOfBirth = dateOfBirthUTC.Value,
                 PasswordHash = "temp_hash" // TODO: Implement proper hashing
             };
 

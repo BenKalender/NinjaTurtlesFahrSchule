@@ -12,6 +12,15 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+         // ⭐ KESTREL HTTP/2 DESTEĞI EKLE ⭐
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.ListenLocalhost(5215, listenOptions =>
+            {
+                listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
+            });
+        });
+
         // Add services
         var startup = new Startup(builder.Configuration);
         startup.ConfigureServices(builder.Services);
