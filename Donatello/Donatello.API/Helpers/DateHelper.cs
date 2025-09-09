@@ -16,19 +16,34 @@ public static class DateHelper
         {
             return null;
         }
-
-        // Define the culture and format to be used for parsing.
-        var culture = new CultureInfo("tr-TR");
-        var formats = new[] { "dd.MM.yyyy", "yyyy-MM-dd" };
-
         // Try to parse the string to a DateTime.
-        if (DateTime.TryParseExact(dateString, formats, culture, DateTimeStyles.None, out DateTime parsedDate))
+        if (DateTime.TryParseExact(dateString, _supportedFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
         {
             // Set the Kind to UTC to resolve the PostgreSQL error.
             return DateTime.SpecifyKind(parsedDate, DateTimeKind.Utc);
         }
-
         // Return null if parsing fails.
         return null;
     }
+
+    private static readonly string[] _supportedFormats = new[]
+    {
+        // ISO 8601 (uluslararası standart)
+        "yyyy-MM-dd",
+        // Genellikle Türk kullanıcıların kullandığı format
+        "dd.MM.yyyy",
+
+        // Slash'li yaygın formatlar (ABD'de ve diğer ülkelerde yaygın)
+        "MM/dd/yyyy",
+        "dd/MM/yyyy",
+
+        // Tireli yaygın formatlar
+        "yyyy-MM-ddTHH:mm:ss", // Tam tarih ve saat
+        "yyyy-MM-ddTHH:mm:ssZ", // Zaman dilimi bilgisiyle
+
+        // Sadece yıl ve ay
+        "yyyy-MM"
+    };
 }
+
+

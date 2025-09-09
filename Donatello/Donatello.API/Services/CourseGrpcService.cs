@@ -1,6 +1,4 @@
 using Grpc.Core;
-using Microsoft.Extensions.Logging;
-using Donatello.API.Grpc;
 using Donatello.Core.Interfaces;
 using Donatello.Core.Models;
 using Donatello.Core.Enums;
