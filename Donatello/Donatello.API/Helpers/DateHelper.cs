@@ -32,17 +32,14 @@ public static class DateHelper
         "yyyy-MM-dd",
         // Genellikle Türk kullanıcıların kullandığı format
         "dd.MM.yyyy",
-
         // Slash'li yaygın formatlar (ABD'de ve diğer ülkelerde yaygın)
         "MM/dd/yyyy",
         "dd/MM/yyyy",
 
         // Tireli yaygın formatlar
         "yyyy-MM-ddTHH:mm:ss", // Tam tarih ve saat
-        "yyyy-MM-ddTHH:mm:ssZ", // Zaman dilimi bilgisiyle
+        "yyyy-MM-ddTHH:mm:ssZ" // Zaman dilimi bilgisiyle
 
-        // Sadece yıl ve ay
-        "yyyy-MM"
     };
 }
 
