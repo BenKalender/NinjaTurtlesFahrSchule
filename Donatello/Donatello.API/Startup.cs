@@ -29,6 +29,7 @@ public class Startup
         services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         
         // Base Repository for generic usage
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

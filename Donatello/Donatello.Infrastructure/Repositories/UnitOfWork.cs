@@ -24,12 +24,16 @@ public class UnitOfWork : IUnitOfWork
     }
 
     // Lazy-loaded repositories using DI
+    private IUserRepository? _users;
     private IStudentRepository? _students;
     private ICourseRepository? _courses;
     private IEnrollmentRepository? _enrollments;
     private IPaymentRepository? _payments;
 
-    public IStudentRepository Students => 
+    public IUserRepository Users => 
+        _users ??= _serviceProvider.GetRequiredService<IUserRepository>();
+        
+    public IStudentRepository Students =>
         _students ??= _serviceProvider.GetRequiredService<IStudentRepository>();
     
     public ICourseRepository Courses => 

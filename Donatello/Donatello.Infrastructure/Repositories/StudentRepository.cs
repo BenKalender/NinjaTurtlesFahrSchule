@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Donatello.Core.Interfaces;
@@ -13,6 +9,23 @@ public class StudentRepository : BaseRepository<Student>, IStudentRepository
 {
     public StudentRepository(DonatelloDbContext context, ILogger<StudentRepository> logger) 
         : base(context, logger) { }
+
+    public async Task<Student?> GetByIdWithUserAsync(Guid id)
+    {
+        try
+        {
+            _logger.LogInformation("Getting student with user by id: {Id}", id);
+            
+            return await _dbSet
+                .Include(s => s.User)  // User JOIN
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting student with user by id: {Id}", id);
+            throw;
+        }
+    }
 
     public async Task<Student?> GetByUserIdAsync(Guid userId)
     {

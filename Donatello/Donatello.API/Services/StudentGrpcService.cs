@@ -29,8 +29,19 @@ public class StudentGrpcService : StudentService.StudentServiceBase
                 // Dönüştürme başarısız oldu, uygun bir hata döndürün.
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid date of birth format."));
             }
-
+            
             await _unitOfWork.BeginTransactionAsync();
+
+            if (await _unitOfWork.Users.EmailExistsAsync(request.Email))
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, "Email already exists"));
+            }
+
+            if (await _unitOfWork.Users.TCNumberExistsAsync(request.TcNumber))
+            {
+                throw new RpcException(new Status(StatusCode.AlreadyExists, "TC Number already exists"));
+            }
+
 
             // Create User first
             var user = new User
@@ -41,11 +52,12 @@ public class StudentGrpcService : StudentService.StudentServiceBase
                 PhoneNumber = request.PhoneNumber,
                 TCNumber = request.TcNumber,
                 DateOfBirth = dateOfBirthUTC.Value,
-                PasswordHash = "temp_hash" // TODO: Implement proper hashing
+                PasswordHash = "temp_hash"  + Guid.NewGuid().ToString(), // TODO: Implement proper password hashing
+                IsActive = true
             };
 
             // Note: You'll need a User repository too
-            // var createdUser = await _unitOfWork.Users.AddAsync(user);
+            var createdUser = await _unitOfWork.Users.AddAsync(user);
 
             // Create Student
             var student = new Student
@@ -54,8 +66,7 @@ public class StudentGrpcService : StudentService.StudentServiceBase
                 StudentNumber = GenerateStudentNumber(),
                 Address = request.Address,
                 EmergencyContact = request.EmergencyContact,
-                EmergencyPhone = request.EmergencyPhone,
-                User = user
+                EmergencyPhone = request.EmergencyPhone
             };
 
             var createdStudent = await _unitOfWork.Students.AddAsync(student);
@@ -64,7 +75,14 @@ public class StudentGrpcService : StudentService.StudentServiceBase
 
             _logger.LogInformation("Student created successfully: {StudentId}", createdStudent.Id);
 
+            // ✅ User bilgilerini dahil etmek için tekrar yükle
+            var studentWithUser = await _unitOfWork.Students.GetByIdWithUserAsync(createdStudent.Id);
             return MapToStudentResponse(createdStudent);
+        }
+        catch (RpcException)
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            throw;
         }
         catch (Exception ex)
         {
@@ -83,7 +101,7 @@ public class StudentGrpcService : StudentService.StudentServiceBase
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid student ID format"));
             }
 
-            var student = await _unitOfWork.Students.GetByIdAsync(studentId);
+            var student = await _unitOfWork.Students.GetByIdWithUserAsync(studentId);
             
             if (student == null)
             {

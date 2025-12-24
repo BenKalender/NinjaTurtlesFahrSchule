@@ -1,11 +1,8 @@
-using System;
-using System.Threading.Tasks;
-using Donatello.Core.Models;
-
 namespace Donatello.Core.Interfaces;
 
 public interface IUnitOfWork : IDisposable
 {
+    IUserRepository Users { get; }
     IStudentRepository Students { get; }
     ICourseRepository Courses { get; }
     IEnrollmentRepository Enrollments { get; }
